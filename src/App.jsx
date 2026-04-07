@@ -35,6 +35,8 @@ export default function App() {
   toast.show();
 }
 
+// Add New User 
+
   function adduser() {
   const name = newname.trim();
   const email = newemail.trim();
@@ -85,6 +87,7 @@ function onchange(id,key,value){
 }
 
 
+// Update User
 function updatefunction(id) {
   const user = users.find(user => user.id === id);
 
@@ -102,6 +105,24 @@ function updatefunction(id) {
     .catch((err) => {
       console.log(err);
       showToast("Error updating user!", "danger");
+    });
+}
+
+// Delete User
+function deleteuser(id) {
+  fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
+    method: "DELETE"
+  })
+    .then(() => {
+      // ✅ remove user from state
+      setusers((prev) => prev.filter((user) => user.id !== id));
+
+      // ✅ show toast
+      showToast("User Deleted successfully!", "success");
+    })
+    .catch((err) => {
+      console.log(err);
+      showToast("Error deleting user!", "danger");
     });
 }
 
@@ -126,7 +147,10 @@ function updatefunction(id) {
             <td>{user.name}</td>
             <td contentEditable suppressContentEditableWarning={true} onChange={value=>onchange(user.id,"email",value)}>{user.email}</td>
             <td contentEditable suppressContentEditableWarning={true} onChange={value=>onchange(user.id,"website",value)}>{user.website}</td>
-            <td><button className='btn btn-secondary gap-2' onClick={()=>updatefunction(user.id)}>Update</button><button className='btn btn-danger'>Delete</button></td>
+            <td>
+              <button className='btn btn-secondary gap-2' onClick={()=>updatefunction(user.id)}>Update</button>
+              &nbsp;
+            <button className='btn btn-danger' onClick={()=>deleteuser(user.id)}>Delete</button></td>
           </tr>
         )}
         </tbody>
